@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>maps with leaflet & topojson</title>
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+        crossorigin="" />
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="data.js"></script>
+
+    <style>
+        html,
+        body,
+        #map {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+        crossorigin="">
+        </script>
+    <script>
+
+
+        // console.log(districtList);
+        var map = L.map('map').setView([20, 78], 4.8);
+        L.TopoJSON = L.GeoJSON.extend({
+            addData: function (jsonData) {
+                if (jsonData.type === 'Topology') {
+                    for (key in jsonData.objects) {
+                        geojson = topojson.feature(jsonData, jsonData.objects[key]);
+                        // console.log(geojson);
+                        L.GeoJSON.prototype.addData.call(this, geojson);
+                    }
+                }
+                else {
+                    L.GeoJSON.prototype.addData.call(this, jsonData);
+                }
+            }
+        });
+
+        const stateUrl = 'https://raw.githubusercontent.com/muditjuneja/JSON/master/state.json';
+        const districtUrl = 'https://raw.githubusercontent.com/muditjuneja/JSON/master/district.json';
+        let a = 0;
+        let selectedState;
+        let topoLayer = new L.TopoJSON();
+
+
+
+
+        function makeMap(url) {
+            $.getJSON(url)
+                .done(addTopoData);
+        }
+
+        function addTopoData(topoData) {
+            topoLayer.addData(topoData);
+            topoLayer.addTo(map);
+            topoLayer.eachLayer(handleLayer);
+        }
+
+        let dict_state = {};
+        function handleLayer(layer) {
+
+
+
+            // console.log(layer);
+
+            // const randomValue = Math.random();
+            // const fillColor = colorScale(randomValue).hex();
+
+            // layer.setStyle({
+            //     fillColor: fillColor,
+            //     fillOpacity: 1,
+            //     color: '#555',
+            //     weight: 1,
+            //     opacity: 0.5
+            // });
+
+
+
+           
+
+            if (layer.feature) {
+                let name;
+                let type = 1;
+                let stateName = layer.feature.properties['ST_NM'];
+                
+
+                if (layer.feature.properties['DISTRICT']) {
+                    name = layer.feature.properties['DISTRICT'];
+                    layer.bringToFront();
+                } else {
+                    name = layer.feature.properties['ST_NM'];
+                    type = 2;
+                }
+                layer.on({
+                    mouseover: function () {
+                        // console.log(layer);
+                        
+                        layer.bindTooltip(name, { sticky: true }).openTooltip();
+                    },
+                    click : function(){
+                        if(type == 2){
+                            // console.log('State clicked',layer.feature.properties);
+                            // a = layer.feature.properties['id'];
+                            selectedState = name;
+                            makeMap(districtUrl);
+                        }
+                    }
+
+                });
+
+                if(selectedState && selectedState != stateName){
+                    // console.log(d_id,a,'Removing');
+                    topoLayer.removeLayer(layer);
+                }
+
+            }
+        }
+
+
+
+        function enterLayer() {
+        }
+
+        function leaveLayer() {
+            // console.log('Leaving rhe layer');
+        }
+
+        function clickState() {
+
+        }
+        makeMap(stateUrl);
+
+    </script>
+</body>
+
+</html>

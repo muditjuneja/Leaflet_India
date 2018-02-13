@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>indias with leaflet & topojson</title>
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+        crossorigin="" />
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="data.js"></script>
+
+    <style>
+        html,
+        body,
+        #india {
+            height: 100%;
+        }
+
+        #state {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="india"></div>
+    <div id="state"></div>
+
+    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+        crossorigin="">
+        </script>
+    <script>
+
+
+        // console.log(districtList);
+
+
+        L.TopoJSON = L.GeoJSON.extend({
+            addData: function (jsonData) {
+                if (jsonData.type === 'Topology') {
+                    for (key in jsonData.objects) {
+                        geojson = topojson.feature(jsonData, jsonData.objects[key]);
+                        L.GeoJSON.prototype.addData.call(this, geojson);
+                    }
+                }
+                else {
+                    L.GeoJSON.prototype.addData.call(this, jsonData);
+                }
+            }
+        });
+
+        //TopoJSON hosted on github
+        const indiaUrl = 'https://raw.githubusercontent.com/muditjuneja/JSON/master/state.json';
+        const stateUrl = 'https://raw.githubusercontent.com/muditjuneja/JSON/master/district.json';
+        let selectedState;
+
+
+        //Topo Layers
+        let stateTopoLayer = new L.TopoJSON();
+        let indiaTopoLayer = new L.TopoJSON();
+
+
+        //Map from DOM
+        var india = L.map('india').setView([20, 78], 4.6);
+
+        //.setView([20, 50], 6.6);
+        var state = L.map('state');
+
+
+
+
+        function makeMap(topoLayer, url, what) {
+            console.log(topoLayer, url, what);
+            $.getJSON(url)
+                .done(function (response) {
+                    addTopoData(response, topoLayer, what);
+                });
+        }
+
+        function addTopoData(topoData, topoLayer, what) {
+            topoLayer.addData(topoData);
+            topoLayer.addTo(what);
+            topoLayer.eachLayer(handleLayer);
+        }
+
+
+        function handleLayer(layer) {
+            // const randomValue = Math.random();
+            // const fillColor = colorScale(randomValue).hex();
+
+            // layer.setStyle({
+            //     fillColor: fillColor,
+            //     fillOpacity: 1,
+            //     color: '#555',
+            //     weight: 1,
+            //     opacity: 0.5
+            // });
+
+            if (layer.feature) {
+                let stateName = layer.feature.properties['ST_NM'];
+                if (layer.feature.properties['DISTRICT']) {
+                    let districtName = layer.feature.properties['DISTRICT'];
+                    stateName = layer.feature.properties['ST_NM'];
+
+                    layer.bringToFront();
+                    layer.on({
+                        mouseover: function () {
+                            layer.bindTooltip(districtName, { sticky: true }).openTooltip();
+                        }
+                    });
+                } else {
+
+                    layer.on({
+                        mouseover: function () {
+                            layer.bindTooltip(stateName, { sticky: true }).openTooltip();
+                        },
+                        click: function () {
+                            selectedState = stateName;
+                            state.fitBounds(this._bounds);
+                            makeMap(stateTopoLayer, stateUrl, state);
+                            $('#india').css('display', 'none');
+                        }
+
+                    });
+                }
+                if (selectedState && selectedState != stateName) {
+                    stateTopoLayer.removeLayer(layer);
+                }
+            }
+
+
+
+        }
+
+
+
+        function enterLayer() {
+        }
+
+        function leaveLayer() {
+        }
+
+        function clickState() {
+        }
+
+        //Map for India
+        makeMap(indiaTopoLayer, indiaUrl, india);
+
+    </script>
+</body>
+
+</html>
