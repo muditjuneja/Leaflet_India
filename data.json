@@ -1,0 +1,115 @@
+[
+    {
+        "id": "0",
+        "name": "Andaman & Nicobar Island",
+        "muslim":2,
+        "sc":3,
+        "st":4
+    }, {
+        "id": "1",
+        "name": "Andhra Pradesh"
+    }, {
+        "id": "2",
+        "name": "Arunanchal Pradesh"
+    }, {
+        "id": "3",
+        "name": "Assam"
+    }, {
+        "id": "4",
+        "name": "Bihar"
+    }, {
+        "id": "5",
+        "name": "Chandigarh"
+    }, {
+        "id": "6",
+        "name": "Chhattisgarh"
+    }, {
+        "id": "7",
+        "name": "Dadra & Nagar Havelli"
+    }, {
+        "id": "8",
+        "name": "Daman & Diu"
+    }, {
+        "id": "9",
+        "name": "Goa"
+    }, {
+        "id": "10",
+        "name": "Gujarat"
+    }, {
+        "id": "11",
+        "name": "Haryana"
+    }, {
+        "id": "12",
+        "name": "Himachal Pradesh"
+    }, {
+        "id": "13",
+        "name": "Jammu & Kashmir"
+    }, {
+        "id": "14",
+        "name": "Jharkhand"
+    }, {
+        "id": "15",
+        "name": "Karnataka"
+    }, {
+        "id": "16",
+        "name": "Kerala"
+    }, {
+        "id": "17",
+        "name": "Lakshadweep"
+    }, {
+        "id": "18",
+        "name": "Madhya Pradesh"
+    }, {
+        "id": "19",
+        "name": "Maharashtra"
+    }, {
+        "id": "20",
+        "name": "Manipur"
+    }, {
+        "id": "21",
+        "name": "Meghalaya"
+    }, {
+        "id": "22",
+        "name": "Mizoram"
+    }, {
+        "id": "23",
+        "name": "Nagaland"
+    }, {
+        "id": "24",
+        "name": "NCT of Delhi"
+    }, {
+        "id": "25",
+        "name": "Puducherry"
+    }, {
+        "id": "26",
+        "name": "Punjab"
+    }, {
+        "id": "27",
+        "name": "Rajasthan",
+        "center": [-5, 5]
+    }, {
+        "id": "28",
+        "name": "Sikkim"
+    }, {
+        "id": "29",
+        "name": "Tamil Nadu"
+    }, {
+        "id": "30",
+        "name": "Telangana"
+    }, {
+        "id": "31",
+        "name": "Tripura"
+    }, {
+        "id": "32",
+        "name": "Uttar Pradesh"
+    }, {
+        "id": "33",
+        "name": "Uttarakhand"
+    }, {
+        "id": "34",
+        "name": "West Bengal"
+    }, {
+        "id": "35",
+        "name": "Odisha"
+    }
+]
