@@ -138,15 +138,7 @@
                 if (layer.feature.properties['DISTRICT']) {
                     let districtName = layer.feature.properties['DISTRICT'];
                     stateName = layer.feature.properties['ST_NM'];
-                    var randomValue = Math.random();
-                    layer.setStyle
-                        ({
-                            fillColor: colorScale(randomValue).hex(),
-                            fillOpacity: 0.65,
-                            color: '#990000',
-                            weight: 0.25,
-                            opacity: 0.9
-                        });
+
                     layer.bringToFront();
                     layer.on({
                         mouseover: function () {
@@ -205,9 +197,9 @@
 
                     });
                 }
-                if (selectedState && selectedState != stateName) {
-                    stateTopoLayer.removeLayer(layer);
-                }
+                // if (selectedState && selectedState != stateName) {
+                //     stateTopoLayer.removeLayer(layer);
+                // }
             }
 
 
