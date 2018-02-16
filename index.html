@@ -39,9 +39,9 @@
             z-index: 1000;
             right: 2%;
             top: 3%;
-            background: #d3d6e0;
+            background: #ffffff;
             width: 10%;
-            height: 15%;
+            height: 12%;
             border-radius: 15px;
             padding: 1%;
         }
@@ -52,12 +52,54 @@
             right: 9%;
             top: 30%;
         }
+
+
+        #scale {
+            height: 20px;
+            background: red;
+            /* For browsers that do not support gradients */
+            background: linear-gradient(to bottom right, #fce08a, #d53e4f);
+            /* Standard syntax (must be last) */
+        }
+
+        #grad_border {
+            border: 1px solid black;
+            padding: 10px;
+            width: 20%;
+            position: absolute;
+            z-index: 1001;
+            left: 1%;
+            top: 90%;
+        }
+
+        #range {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #grad1 {
+            height: 10px;
+            z-index: 2000;
+            background: red;
+            /* For browsers that do not support gradients */
+            background: linear-gradient(to bottom right, #fce08a, #d53e4f);
+            /* Standard syntax (must be last) */
+        }
     </style>
 </head>
 
 <body>
+        <div id="grad_border">
+                <div id="grad1"></div>
+                <div id="range">
+                    <span> 0 </span>
+                    
+                    <span id="max">  </span>
+                </div>
+            </div>
     <button onclick="goBack();" id="go-back">Back</button>
     <div id="info"></div>
+    
     <div id="select">
         <select id="type" onchange="selectType();">
             <option value="muslim">Muslim</option>
@@ -162,13 +204,13 @@
                     });
                 } else {
                     //  var randomValue = Math.random();
-                    let html = "<b>State</b><br> " + stateName;
+                    let html = "<b>India Population</b> " + stateName;
                     let id = layer.feature.properties['id'];
                     let s;
                     if (stateData) {
                         s = stateData.find(x => x.id == id);
                         if (s) {
-                            html = html + "<br>Value : " + s.value + "<br>%" + (s.value / s.total) * 100;
+                            html = html + "<br>" + s.value + "<br>" + ((s.value / s.total) * 100).toFixed(2) + "%";
                             fillColor = colorScale(s.value).hex();
                         } else {
                             fillColor = "#666";
@@ -177,8 +219,8 @@
                             ({
                                 fillColor: fillColor,
                                 fillOpacity: 0.65,
-                                color: '#990000',
-                                weight: 0.25,
+                                color: '#ffffff',
+                                weight: 2,
                                 opacity: 0.9
                             });
                     }
@@ -231,8 +273,10 @@
                     stateData.sort(function (a, b) {
                         return b.value - a.value;
                     });
+
+                    $("#max").html(stateData[0].value);
                     colorScale = chroma
-                        .scale(['#dbf7e4', '#09e451'])
+                        .scale(['#fce08a', '#d53e4f'])
                         .domain([0, stateData[0].value]);
                     makeMap(indiaTopoLayer, indiaUrl, india);
                 }
